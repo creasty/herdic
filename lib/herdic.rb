@@ -1,9 +1,9 @@
-require 'herdic/version'
-require 'herdic/util'
-require 'herdic/store'
-require 'herdic/loader'
-require 'herdic/printer'
-require 'herdic/client'
+require_relative 'herdic/version'
+require_relative 'herdic/util'
+require_relative 'herdic/store'
+require_relative 'herdic/loader'
+require_relative 'herdic/printer'
+require_relative 'herdic/client'
 
 require 'fileutils'
 

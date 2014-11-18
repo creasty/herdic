@@ -1,4 +1,4 @@
-require 'ap'
+require 'json'
 
 
 module Herdic
@@ -16,11 +16,11 @@ module Herdic
       puts "\n\n"
       hr rule: '=', color: :green
 
-      puts [meta['method'].green, meta['endpoint']].join('  ')
+      puts [Util.color(meta['method'], :green), meta['endpoint']].join('  ')
 
       if meta['title']
         indent = ' ' * meta['method'].size
-        puts [indent, meta['title'].white].join('  ')
+        puts [indent, Util.color(meta['title'], :white)].join('  ')
       end
 
       hr rule: '=', color: :green
@@ -28,7 +28,7 @@ module Herdic
 
     def subtitle(text)
       puts
-      puts "==> #{text}".blue
+      puts Util.color("==> #{text}", :blue)
       puts
     end
 
@@ -36,14 +36,14 @@ module Herdic
       subtitle 'Request'
 
       if header.empty?
-        puts 'no header'.white
+        puts Util.color('no header', :white)
       else
         print_header header
       end
 
       hr
 
-      ap body
+      print_json body
     end
 
     def response(response, body)
@@ -54,25 +54,27 @@ module Herdic
       hr
 
       if body.empty?
-        puts 'no body'.white
+        puts Util.color('no body', :white)
       elsif 'application/json' == response.content_type
-        ap body
-      elsif @options['html']
-        puts body
+        print_json body
       else
-        puts 'N/A'.white
+        puts body
       end
     end
 
     private def print_header(header)
       max_cols = header.keys.map(&:size).max
       header.each do |k, v|
-        puts [("%#{max_cols}s" % k).white, v].join ' '
+        puts [Util.color("%#{max_cols}s" % k, :white), v].join ' '
       end
     end
 
+    private def print_json(json)
+      puts JSON.pretty_generate(json)
+    end
+
     private def hr(rule: '-', color: :black)
-      puts (rule * terminal_cols).send(color)
+      puts Util.color(rule * terminal_cols, color)
     end
 
     private def terminal_cols
