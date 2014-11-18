@@ -29,8 +29,8 @@ module Herdic
 
     def subtitle(text)
       puts
-      puts Util.color("==> #{text}", :blue)
-      puts
+      puts Util.color(text, :green)
+      hr color: :green
     end
 
     def request(header, body)
