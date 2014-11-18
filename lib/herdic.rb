@@ -22,7 +22,7 @@ module Herdic
       @pwd               = File.expand_path '.'
       @herdic_path       = File.expand_path '~/.herdic'
       @store_path        = File.join @herdic_path, 'store'
-      @edit_request_file = File.join @herdic_path, 'edit_request.yml'
+      @edit_request_file = File.join @herdic_path, 'edit_request.yaml'
       @config_filename   = 'herdic.yaml'
     end
 
