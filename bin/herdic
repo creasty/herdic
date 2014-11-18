@@ -3,7 +3,7 @@
 require 'herdic'
 
 
-options = ARGV.getopts 'e', 'c:', 'use-ssl', 'html'
+options = ARGV.getopts 'e', 'c:', 'use-ssl'
 file = ARGV[0]
 
 raise 'No file given' if !file || file.empty?
