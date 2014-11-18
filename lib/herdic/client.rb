@@ -78,15 +78,8 @@ module Herdic
 
       response = http.start do
         case @meta['method']
-        when 'GET'
-          uri.query = @body.to_query
-          http.get uri.request_uri, @header
-        when 'POST'
-          http.post uri.request_uri, @body.to_query, @header
-        when 'PATCH'
-          http.patch uri.request_uri, @body.to_query, @header
-        when 'DELETE'
-          http.delete uri.request_uri, @header
+        when 'GET', 'POST', 'PATCH', 'PUT', 'DELETE'
+          http.send_request @meta['method'], uri.request_uri, @body.to_query, @header
         else
           raise "Unsupported method: #{@meta['method']}"
         end
