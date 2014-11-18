@@ -98,7 +98,7 @@ module Herdic
     private def setup_spec(spec)
       @meta     = spec.slice 'title', 'method', 'endpoint'
       @register = spec['register'] || {}
-      @header  = spec['header'] || {}
+      @header   = spec['header'] || {}
       @body     = spec['body'] || {}
 
       @meta['method'].upcase!
