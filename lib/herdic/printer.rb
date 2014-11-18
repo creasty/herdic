@@ -78,7 +78,7 @@ module Herdic
 
       puts Pygments.highlight(JSON.pretty_generate(json), {
         formatter: 'terminal',
-        lexer:     'json',
+        lexer:     'javascript',
         options:   { encoding: 'utf-8' },
       })
     end
