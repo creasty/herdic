@@ -1,4 +1,5 @@
 require 'json'
+require 'pygments'
 
 
 module Herdic
@@ -70,7 +71,16 @@ module Herdic
     end
 
     private def print_json(json)
-      puts JSON.pretty_generate(json)
+      if json.empty?
+        puts '{}'
+        return
+      end
+
+      puts Pygments.highlight(JSON.pretty_generate(json), {
+        formatter: 'terminal',
+        lexer:     'json',
+        options:   { encoding: 'utf-8' },
+      })
     end
 
     private def hr(rule: '-', color: :black)
