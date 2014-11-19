@@ -18,8 +18,35 @@ gem 'herdic'
 ```
 
 
+Synopsis
+--------
+
+```
+herdic [-e] [-c config.yaml] [--use-ssl] path/to/spec.yaml
+```
+
+| Option           | Description                                   |
+| ---------------- | --------------------------------------------- |
+| `-e`             | Edit request file in vim (default) before run |
+| `-c config.yaml` | Specify absolute path of herdic.yaml          |
+| `--use-ssl`      | Use `Net::HTTP` with flag `use_ssl = true`    |
+
+
 Sample
 ------
+
+### Config
+
+```yaml
+# herdic.yaml
+api_base: http://localhost:3000/user_v1
+
+user_account:
+  email:    user+1@example.com
+  password: password
+```
+
+### Specs
 
 ```yaml
 # sessions/create.yaml
@@ -49,6 +76,8 @@ Sample
   header:
     X-Access-Token: <%= registry['user_account_access_token'] %>
 ```
+
+### Run
 
 ```sh
 $ herdic user_bases/show.yaml

@@ -93,4 +93,3 @@ module Herdic
 
   end
 end
-
