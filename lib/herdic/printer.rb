@@ -9,8 +9,12 @@ module Herdic
       @options = options
     end
 
-    def start_message
-      puts 'Starting Herdic...'
+    def start_message(config_file = nil)
+      if config_file
+        puts "Starting Herdic (#{config_file})"
+      else
+        puts 'Starting Herdic'
+      end
     end
 
     def title(meta)

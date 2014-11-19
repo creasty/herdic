@@ -17,16 +17,16 @@ module Herdic
     def initialize(file, options)
       @file, @options = file, options
 
-      @printer = Printer.new @options
-      @printer.start_message
+      @context = binding
 
       @config_file = @options['c'] || Util.find_files_upward(Herdic.config_filename, Herdic.pwd, 1)[0]
-      @context = binding
+      load_config @config_file if @config_file
+
+      @printer = Printer.new @options
+      @printer.start_message @config_file
 
       @store = Store.new @config_file
       @registry = @store.data
-
-      load_config @config_file if @config_file
     end
 
     def load_config(file)
