@@ -17,13 +17,14 @@ module Herdic
     def initialize(file, options)
       @file, @options = file, options
 
+      @printer = Printer.new @options
+      @printer.start_message
+
       @config_file = @options['c'] || Util.find_files_upward(Herdic.config_filename, Herdic.pwd, 1)[0]
       @context = binding
 
       @store = Store.new @config_file
       @registry = @store.data
-
-      @printer = Printer.new @options
 
       load_config @config_file if @config_file
     end
@@ -47,8 +48,6 @@ module Herdic
       else
         @specs = Loader.new @file
       end
-
-      @printer.start_message
 
       @specs.each do |spec|
         # FIXME: figure out better way
