@@ -1,5 +1,6 @@
 require 'active_support/core_ext'
 require 'erb'
+require 'fileutils'
 require 'json'
 require 'net/http'
 require 'open-uri'
@@ -25,7 +26,6 @@ module Herdic
       @printer = Printer.new @options
 
       load_config @config_file if @config_file
-      load_yaml
     end
 
     def load_config(file)
@@ -38,24 +38,17 @@ module Herdic
       @config = Psych.load @config
     end
 
-    def load_yaml
-      @specs = Loader.new(@file).specs
-
+    def run_all
       if @options['e']
-        File.open(Herdic.edit_request_file, 'w+') do |f|
-          f.write Psych.dump(@specs)
-        end
-
+        FileUtils.cp @file, Herdic.edit_request_file
         system "$EDITOR '%s'" % Herdic.edit_request_file
 
-        File.open(Herdic.edit_request_file, 'r') do |f|
-          @specs = Psych.load f.read
-        end
+        @specs = Loader.new Herdic.edit_request_file, @file
+      else
+        @specs = Loader.new @file
       end
-    end
 
-    def run_all
-      @printer.start_message @specs
+      @printer.start_message
 
       @specs.each do |spec|
         # FIXME: figure out better way

@@ -4,34 +4,38 @@ require 'psych'
 module Herdic
   class Loader
 
-    attr_accessor :specs
+    include Enumerable
 
-    def initialize(file)
-      @specs = []
-
-      load file
+    def initialize(file, original = nil)
+      @file, @original = file, original
     end
 
-    def load(file, included_from = nil)
+    def load(file, original, included_from, &block)
       file = File.expand_path file, included_from
 
+      specs = ''
+
       File.open(file, 'r') do |f|
-        @_specs = f.read
+        specs = f.read
       end
 
-      @_specs = Psych.load @_specs
+      specs = Psych.load specs
 
-      @_specs.each do |spec|
-        spec['file'] = file
+      specs.each do |spec|
+        spec['file'] = original || file
 
         if spec['include']
-          load spec['include'], File.dirname(file)
+          load spec['include'], nil, File.dirname(spec['file']), &block
         else
-          @specs << spec
+          block.call spec
         end
       end
+    end
 
-      @_specs = nil
+    def each(&block)
+      return unless block
+
+      load @file, @original, nil, &block
     end
 
   end

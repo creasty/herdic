@@ -9,8 +9,8 @@ module Herdic
       @options = options
     end
 
-    def start_message(specs)
-      puts 'Running %d spec(s)' % specs.size
+    def start_message
+      puts 'Starting Herdic...'
     end
 
     def title(meta)
