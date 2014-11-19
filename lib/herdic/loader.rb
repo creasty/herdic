@@ -10,7 +10,7 @@ module Herdic
       @file, @original = file, original
     end
 
-    def load(file, original, included_from, &block)
+    def load(file, original, included_from = nil)
       file = File.expand_path file, included_from
 
       specs = ''
@@ -25,9 +25,9 @@ module Herdic
         spec['file'] = original || file
 
         if spec['include']
-          load spec['include'], nil, File.dirname(spec['file']), &block
+          load spec['include'], nil, File.dirname(spec['file'])
         else
-          block.call spec
+          @block.call spec
         end
       end
     end
@@ -35,7 +35,8 @@ module Herdic
     def each(&block)
       return unless block
 
-      load @file, @original, nil, &block
+      @block = block
+      load @file, @original
     end
 
   end
