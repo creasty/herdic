@@ -64,11 +64,27 @@ module Herdic
     private def run(spec)
       setup_spec spec
 
+      @printer.title @meta
+      @printer.request @header, @body
+
+      response = get_response
+
+      body = response.body
+
+      if 'application/json' == response.content_type
+        body = JSON.parse body
+        register response, body
+      end
+
+      @printer.response response, body
+    end
+
+    private def get_response
       uri = URI.parse @meta['endpoint']
       http = Net::HTTP.new uri.host, uri.port
       http.use_ssl = @options['use-ssl']
 
-      response = http.start do
+      http.start do
         case @meta['method']
         when 'GET', 'POST', 'PATCH', 'PUT', 'DELETE'
           http.send_request @meta['method'], uri.request_uri, @body.to_query, @header
@@ -76,15 +92,6 @@ module Herdic
           raise "Unsupported method: #{@meta['method']}"
         end
       end
-
-      body = response.body
-      body = JSON.parse body if 'application/json' == response.content_type
-
-      @printer.title @meta
-      @printer.request @header, @body
-      @printer.response response, body
-
-      register response, body
     end
 
     private def setup_spec(spec)
@@ -98,8 +105,6 @@ module Herdic
     end
 
     private def register(response, body)
-      return unless 'application/json' == response.content_type
-
       @register.each do |name, path|
         next if path.empty?
 
