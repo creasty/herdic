@@ -42,7 +42,7 @@ module Herdic
     def run_all
       if @options['e']
         FileUtils.cp @file, Herdic.edit_request_file
-        system "$EDITOR '%s'" % Herdic.edit_request_file
+        system "%s '%s'" % [Herdic.editor, Herdic.edit_request_file]
 
         @specs = Loader.new Herdic.edit_request_file, @file
       else

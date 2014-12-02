@@ -16,7 +16,8 @@ module Herdic
       :herdic_path,
       :store_path,
       :edit_request_file,
-      :config_filename
+      :config_filename,
+      :editor
 
     def initialize
       @pwd               = File.expand_path '.'
@@ -24,6 +25,7 @@ module Herdic
       @store_path        = File.join @herdic_path, 'store'
       @edit_request_file = File.join @herdic_path, 'edit_request.yaml'
       @config_filename   = 'herdic.yaml'
+      @editor            = '/usr/bin/env vim'
     end
 
   end
