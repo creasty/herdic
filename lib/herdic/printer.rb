@@ -58,7 +58,7 @@ module Herdic
 
       hr
 
-      if body.empty?
+      if !body || body.empty?
         puts Util.color('no body', :white)
       elsif 'application/json' == response.content_type
         print_json body
