@@ -27,7 +27,7 @@ module Herdic
 
       @store    = Store.new @config_file
       @registry = @store.data
-      @cookies  = (@registry[:_cookies] ||= [])
+      @cookie   = (@registry[:_cookie] ||= {})
     end
 
     def load_config(file)
@@ -77,7 +77,7 @@ module Herdic
         register response, body
       end
 
-      save_cookies response if @options['cookie']
+      save_cookie response if @options['cookie']
 
       @printer.response response, body
     end
@@ -106,8 +106,8 @@ module Herdic
       @meta['method'].upcase!
       @header = @header.map { |k, v| [k, v.to_s] }.to_h
 
-      if @options['cookie']
-        @header['Cookie'] = @cookies.join ';'
+      if @options['cookie'] && !@cookie.empty?
+        @header['Cookie'] = @cookie.map { |k, v| '%s=%s' % [k, v] }.join ';'
       end
     end
 
@@ -126,9 +126,11 @@ module Herdic
       end
     end
 
-    private def save_cookies(response)
-      @cookies << response.header['Set-Cookie'].to_s.split(';')[0]
-      @cookies.uniq!
+    private def save_cookie(response)
+      response.get_fields('Set-Cookie').each do |str|
+        k, v = str.split(';')[0].split '='
+        @cookie[k] = v
+      end
     end
 
   end
