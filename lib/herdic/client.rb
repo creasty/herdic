@@ -127,7 +127,7 @@ module Herdic
     end
 
     private def save_cookie(response)
-      response.get_fields('Set-Cookie').each do |str|
+      Array(response.get_fields('Set-Cookie')).each do |str|
         k, v = str.split(';')[0].split '='
         @cookie[k] = v
       end
