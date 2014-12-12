@@ -77,7 +77,7 @@ module Herdic
         register response, body
       end
 
-      save_cookie response if @options['cookie']
+      save_cookie response unless @options['no-cookie']
 
       @printer.response response, body
     end
@@ -106,7 +106,7 @@ module Herdic
       @meta['method'].upcase!
       @header = @header.map { |k, v| [k, v.to_s] }.to_h
 
-      if @options['cookie'] && !@cookie.empty?
+      unless @options['no-cookie'] || @cookie.empty?
         @header['Cookie'] = @cookie.map { |k, v| '%s=%s' % [k, v] }.join ';'
       end
     end
