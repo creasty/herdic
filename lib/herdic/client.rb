@@ -25,8 +25,9 @@ module Herdic
       @printer = Printer.new @options
       @printer.start_message @config_file
 
-      @store = Store.new @config_file
+      @store    = Store.new @config_file
       @registry = @store.data
+      @cookies  = (@registry[:_cookies] ||= [])
     end
 
     def load_config(file)
@@ -76,6 +77,8 @@ module Herdic
         register response, body
       end
 
+      save_cookies response if @options['cookie']
+
       @printer.response response, body
     end
 
@@ -102,6 +105,10 @@ module Herdic
 
       @meta['method'].upcase!
       @header = @header.map { |k, v| [k, v.to_s] }.to_h
+
+      if @options['cookie']
+        @header['Cookie'] = @cookies.join ';'
+      end
     end
 
     private def register(response, body)
@@ -117,6 +124,11 @@ module Herdic
 
         @registry[name] = val
       end
+    end
+
+    private def save_cookies(response)
+      @cookies << response.header['Set-Cookie'].to_s.split(';')[0]
+      @cookies.uniq!
     end
 
   end
